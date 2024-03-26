@@ -8,7 +8,10 @@ type PaginationButtonProps = {
 };
 
 export default function PaginationButton({ onClick, isDisabled, children, className }: PaginationButtonProps) {
-    return <button disabled={isDisabled} className={className} onClick={onClick}>
+    return <button disabled={isDisabled} className={className} onClick={(e) => {
+        onClick();
+        e.currentTarget.blur();
+    }}>
         {children}
     </button>;
 }

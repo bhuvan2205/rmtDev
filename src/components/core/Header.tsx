@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction } from "react";
-import BookmarksButton from "../ui/BookmarksButton";
+import BookmarksButton from "../bookmarks/BookmarksButton";
 import Logo from "../ui/Logo";
 import SearchForm from "../search/SearchForm";
 

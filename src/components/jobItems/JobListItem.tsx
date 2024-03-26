@@ -1,3 +1,4 @@
+import { useBookmarkContext } from "../../lib/hooks";
 import { JobItem } from "../../lib/type";
 import BookmarkIcon from "../bookmarks/BookmarkIcon";
 
@@ -7,10 +8,11 @@ type JobListItemProps = {
 };
 
 export default function JobListItem({ jobItem, isActive }: JobListItemProps) {
-  const { company, badgeLetters, title, daysAgo } = jobItem || {};
+  const { company, badgeLetters, title, daysAgo, id } = jobItem || {};
+  const { handleToggleBookMark, bookmarks } = useBookmarkContext();
   return (
-    <li className={`job-item ${isActive && "job-item--active"}`}>
-      <a className="job-item__link" href={`#${jobItem.id}`}>
+    <li className={`job-item ${isActive ? "job-item--active" : ""}`}>
+      <a className="job-item__link" href={`#${id}`}>
         <div className="job-item__badge">{badgeLetters}</div>
 
         <div className="job-item__middle">
@@ -19,7 +21,7 @@ export default function JobListItem({ jobItem, isActive }: JobListItemProps) {
         </div>
 
         <div className="job-item__right">
-          <BookmarkIcon />
+          <BookmarkIcon onClick={() => handleToggleBookMark(id)} isBookmarked={bookmarks?.includes(id)} />
           <time className="job-item__time">{daysAgo}d</time>
         </div>
       </a>

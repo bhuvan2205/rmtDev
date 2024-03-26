@@ -1,16 +1,18 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import Background from "./components/ui/Background";
 import Container from "./components/core/Container";
 import Footer from "./components/ui/Footer";
 import Header from "./components/core/Header";
-import { useJobItems } from "./lib/hooks";
+import { useDebounce, useJobItems } from "./lib/hooks";
 import { Toaster } from 'react-hot-toast';
 import { PageDirectionProps, SortMethods } from "./lib/type";
 import { REVIEWS_PER_PAGE } from "./constants/jobItems";
+import BookmarksProvider from "./context/BookmarksProvider";
+import ActiveJobItemIdProvider from "./context/ActiveJobItemIdProvider";
 
 function App() {
   const [searchText, setSearchText] = useState('');
-  const [debouncedSearchText, setDebouncedSearchText] = useState('');
+  const debouncedSearchText = useDebounce(searchText);
   const [currentPage, setCurrentPage] = useState(1);
   const [sortBy, setSortBy] = useState<SortMethods>('relevant');
 
@@ -51,24 +53,14 @@ function App() {
     setSortBy(newSortBy);
   };
 
-  useEffect(() => {
-
-    if (!searchText) return;
-
-    const timeout = setTimeout(() => {
-      setDebouncedSearchText(searchText);
-    }, 1000);
-
-    return () => {
-      clearTimeout(timeout);
-    };
-
-  }, [searchText]);
-
   return <>
     <Background />
-    <Header setSearchText={setSearchText} searchText={searchText} />
-    <Container jobItemResults={totalJobItems} jobItems={jobItems} isLoading={isLoading} onChangePage={handleChangePage} totalPageCount={totalPageCount} currentPage={currentPage} handleChangeSort={handleChangeSort} sortBy={sortBy} />
+    <ActiveJobItemIdProvider>
+      <BookmarksProvider>
+        <Header setSearchText={setSearchText} searchText={searchText} />
+        <Container jobItemResults={totalJobItems} jobItems={jobItems} isLoading={isLoading} onChangePage={handleChangePage} totalPageCount={totalPageCount} currentPage={currentPage} handleChangeSort={handleChangeSort} sortBy={sortBy} />
+      </BookmarksProvider>
+    </ActiveJobItemIdProvider>
     <Footer />
     <Toaster position="top-right" />
   </>;

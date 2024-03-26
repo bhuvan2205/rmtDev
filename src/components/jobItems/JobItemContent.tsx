@@ -1,11 +1,13 @@
-import { useGetActiveJobItem } from "../../lib/hooks";
+import { useActiveJobItemContext, useBookmarkContext, useGetActiveJobItem } from "../../lib/hooks";
 import BookmarkIcon from "../bookmarks/BookmarkIcon";
 import Spinner from "../ui/Spinner";
 
 export default function JobItemContent() {
-  const { jobItem: activeJobItem, isLoading } = useGetActiveJobItem();
+  const { activeJobItemId } = useActiveJobItemContext();
+  const { jobItem: activeJobItem, isLoading } = useGetActiveJobItem(activeJobItemId);
+  const { handleToggleBookMark, bookmarks } = useBookmarkContext();
 
-  const { daysAgo, badgeLetters, company, companyURL, coverImgURL, description, duration, location, qualifications, reviews, salary, title } = activeJobItem || {};
+  const { daysAgo, badgeLetters, company, companyURL, coverImgURL, description, duration, location, qualifications, reviews, salary, title, id } = activeJobItem || {};
 
   if (isLoading) {
     return (
@@ -39,7 +41,7 @@ export default function JobItemContent() {
               <div className="job-info__badge">{badgeLetters}</div>
               <div className="job-info__below-badge">
                 <time className="job-info__time">{daysAgo}d</time>
-                <BookmarkIcon />
+                <BookmarkIcon onClick={() => handleToggleBookMark(id as number)} isBookmarked={bookmarks?.includes(id as number)} />
               </div>
             </div>
 
