@@ -4,6 +4,8 @@ import { fetchJobItem, fetchJobItemList, handleErrors } from "./utils";
 import { STALE_TIME } from "../constants/query";
 import { BookmarksContext } from "../context/BookmarksProvider";
 import { ActiveJobItemIdContext } from "../context/ActiveJobItemIdProvider";
+import { SearchTextContext } from "../context/SearchTextProvider";
+import { JobItemsContext } from "../context/JobItemsProvider";
 
 export const useJobItems = (searchText: string) => {
     const { data, isInitialLoading } = useQuery(['job-list', searchText], () => fetchJobItemList(searchText), {
@@ -106,6 +108,22 @@ export const useBookmarkContext = () => {
 
 export const useActiveJobItemContext = () => {
     const context = useContext(ActiveJobItemIdContext);
+    if (!context) {
+        throw new Error('Provider should be placed inside the Wrapper!');
+    }
+    return context;
+};
+
+export const useSearchTextContext = () => {
+    const context = useContext(SearchTextContext);
+    if (!context) {
+        throw new Error('Provider should be placed inside the Wrapper!');
+    }
+    return context;
+};
+
+export const useJobItemsContext = () => {
+    const context = useContext(JobItemsContext);
     if (!context) {
         throw new Error('Provider should be placed inside the Wrapper!');
     }

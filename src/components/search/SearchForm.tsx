@@ -1,16 +1,14 @@
-import { ChangeEvent, Dispatch, FormEvent, SetStateAction } from "react";
+import { ChangeEvent, FormEvent } from "react";
+import { useSearchTextContext } from "../../lib/hooks";
 
-type SearchFormProps = {
-  searchText: string;
-  setSearchText: Dispatch<SetStateAction<string>>;
-};
+export default function SearchForm() {
 
-export default function SearchForm({ setSearchText, searchText }: SearchFormProps) {
+  const { handleSearchText, searchText } = useSearchTextContext();
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
 
     const input = e.target.value;
-    setSearchText(input);
+    handleSearchText(input);
   };
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
